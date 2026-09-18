@@ -39,12 +39,12 @@ jobs:
           set -euo pipefail
 
           mapfile -t compose_files < <(
-            find apps -type f \( \
-              -name 'compose.yml' -o \
-              -name 'compose.yaml' -o \
-              -name 'docker-compose.yml' -o \
-              -name 'docker-compose.yaml' \
-            ) | sort
+            {
+              find apps -type f -name 'compose.yml'
+              find apps -type f -name 'compose.yaml'
+              find apps -type f -name 'docker-compose.yml'
+              find apps -type f -name 'docker-compose.yaml'
+            } | sort -u
           )
 
           if [ "${#compose_files[@]}" -eq 0 ]; then
