@@ -33,7 +33,7 @@ curl -I http://localhost:8096
 |---|---|---|
 | Configuration | `/srv/.../config` | `/config` |
 | Cache | `/srv/.../cache` | `/cache` |
-| Movies | `/mnt/.../movies` | `/media/movies` |
+| Movies | `/mnt/.../pelis` | `/media/pelis` |
 | Series | `/mnt/.../series` | `/media/series` |
 
 ## Important

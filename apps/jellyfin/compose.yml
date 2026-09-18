@@ -20,7 +20,7 @@ services:
 
       - type: bind
         source: ${MEDIA_MOVIES_DIR}
-        target: /media/movies
+        target: /media/pelis
 
       - type: bind
         source: ${MEDIA_SERIES_DIR}
