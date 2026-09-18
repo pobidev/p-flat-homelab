@@ -1,0 +1,29 @@
+services:
+  jellyfin:
+    image: ${JELLYFIN_IMAGE}
+    container_name: ${JELLYFIN_CONTAINER_NAME}
+
+    user: "${MEDIA_UID}:${MEDIA_GID}"
+
+    ports:
+      - "${JELLYFIN_HTTP_PORT}:8096/tcp"
+      - "${JELLYFIN_DISCOVERY_PORT}:7359/udp"
+
+    volumes:
+      - type: bind
+        source: ${JELLYFIN_CONFIG_DIR}
+        target: /config
+
+      - type: bind
+        source: ${JELLYFIN_CACHE_DIR}
+        target: /cache
+
+      - type: bind
+        source: ${MEDIA_MOVIES_DIR}
+        target: /media/pelis
+
+      - type: bind
+        source: ${MEDIA_SERIES_DIR}
+        target: /media/series
+
+    restart: unless-stopped
