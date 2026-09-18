@@ -1,0 +1,71 @@
+name: Validate Docker Compose
+
+on:
+  push:
+    branches:
+      - main
+      - "ci/**"
+      - "feat/**"
+    paths:
+      - "apps/**/*.yml"
+      - "apps/**/*.yaml"
+      - "apps/**/.env.example"
+      - ".github/workflows/**"
+
+  pull_request:
+    paths:
+      - "apps/**/*.yml"
+      - "apps/**/*.yaml"
+      - "apps/**/.env.example"
+      - ".github/workflows/**"
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-compose:
+    name: Validate Compose files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Validate Compose files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mapfile -t compose_files < <(
+            {
+              find apps -type f -name 'compose.yml'
+              find apps -type f -name 'compose.yaml'
+              find apps -type f -name 'docker-compose.yml'
+              find apps -type f -name 'docker-compose.yaml'
+            } | sort -u
+          )
+
+          if [ "${#compose_files[@]}" -eq 0 ]; then
+            echo "No Compose files found under apps/"
+            exit 1
+          fi
+
+          for compose_file in "${compose_files[@]}"; do
+            app_dir="$(dirname "$compose_file")"
+
+            echo "::group::Validating $compose_file"
+
+            if [ -f "$app_dir/.env.example" ]; then
+              cp "$app_dir/.env.example" "$app_dir/.env"
+            fi
+
+            docker compose \
+              --project-directory "$app_dir" \
+              -f "$compose_file" \
+              config -q
+
+            echo "Compose configuration is valid"
+            echo "::endgroup::"
+          done
