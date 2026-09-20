@@ -54,6 +54,10 @@ services:
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+      - 9.9.9.9
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
@@ -84,6 +88,10 @@ services:
   flaresolverr:
       image: ghcr.io/flaresolverr/flaresolverr:latest
       container_name: flaresolverr
+      dns:
+        - 1.1.1.1
+        - 1.0.0.1
+        - 9.9.9.9
       environment:
         LOG_LEVEL: ${FLARESOLVERR_LOG_LEVEL}
         LOG_HTML: ${FLARESOLVERR_LOG_HTML}
