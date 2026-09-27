@@ -1,0 +1,42 @@
+services:
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+
+      # SERVER PARÁMETERS
+      - SERVERURL=${WG_DNS_DOMAIN}
+      - SERVERPORT=51820
+
+      # NUMBER OF CLIENTS TO GENERATE
+      - PEERS=2
+
+      - PEERDNS=auto
+
+      # Red VPN
+      - INTERNAL_SUBNET=10.13.13.0
+
+      # ALLOWED ACCESS IPS FROM VPN
+      - ALLOWEDIPS=192.168.1.0/24
+
+      - LOG_CONFS=true
+
+    volumes:
+      - ./config:/config
+      - /lib/modules:/lib/modules:ro
+
+    ports:
+      - "51820:51820/udp"
+
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+
+    restart: unless-stopped
