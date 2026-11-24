@@ -1,0 +1,24 @@
+services:
+  nichespot:
+    image: ghcr.io/pobidev/nichespot:latest
+    container_name: nichespot
+
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      PORT: 3000
+      JWT_SECRET: ${NICHESPOT_JWT_SECRET}
+      LASTFM_API_KEY: ${LASTFM_API_KEY}
+      DB_PATH: /app/data/nichespot.db
+
+    ports:
+      - "${NICHESPOT_PORT}:3000"
+
+    volumes:
+      - ${NICHESPOT_DATA_DIR}:/app/data
+
+    security_opt:
+      - no-new-privileges:true
+
+    restart: unless-stopped
